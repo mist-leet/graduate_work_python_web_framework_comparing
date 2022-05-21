@@ -3,20 +3,20 @@ import random
 import string
 from typing import List
 
-from sqlalchemy import (
-    create_engine
-)
+from dotenv import load_dotenv
+from sqlalchemy import Integer, Column, String
+from sqlalchemy import create_engine
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.future import select
 from sqlalchemy.orm import Session
-from sqlalchemy_utils import create_database, drop_database
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy_utils import create_database
 from sqlalchemy_utils.functions import database_exists
 
-from sqlalchemy import Integer, Column, String, ForeignKey, PrimaryKeyConstraint, Boolean, DateTime
-from sqlalchemy.orm import declarative_base, relationship
-from sqlalchemy.future import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy import text
+load_dotenv()
 
 Base = declarative_base()
 
@@ -129,6 +129,20 @@ class AsyncDatabase:
         self.async_session = sessionmaker(
             self.engine, expire_on_commit=False, class_=AsyncSession
         )
+
+    async def generate_data(self) -> None:
+        i = 0
+        chunk_size = 10_000
+        while i != self.SIMPLE_MOCK_ROW_COUNT:
+            async with self.async_session() as session:
+                objects = [
+                    SimpleMock(text=get_default_string()) for j in range(chunk_size)
+                ]
+                i += chunk_size
+                print(f'{i} objects generated', end=' ')
+                session.add_all(objects)
+                session.commit()
+                print(f'{i} objects commited')
 
     async def get_data_by_id(self) -> SimpleMock:
         async with self.async_session() as session:

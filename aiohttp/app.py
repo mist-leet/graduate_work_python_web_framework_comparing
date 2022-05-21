@@ -41,7 +41,7 @@ class AiohttpApplication:
             ])
 
         # STATIC_PATH = os.path.join(os.path.dirname(__file__), "../static")
-        STATIC_PATH = '/home/ilya/git/graduate_work_python_web_framework_comparing/static/basic/'
+        STATIC_PATH = os.getenv('BASE_DIR') + '/static/basic/'
         self.app.router.add_static('/static/', STATIC_PATH, name='static')
 
         if run_app:
