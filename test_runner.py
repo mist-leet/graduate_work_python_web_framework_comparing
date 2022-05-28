@@ -64,12 +64,11 @@ class TestRunner:
         for app_path in TestRunner.test_app_dirs:
             for service_thread in TestRunner.web_service_thread:
                 main_proc = subprocess.Popen([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'], stdout=subprocess.PIPE)
+                print([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'])
+                time.sleep(5)
                 with subprocess.Popen(['ps'], stdout=subprocess.PIPE) as proc:
                     output = proc.stdout.read().decode()
                     print(output)
-
-                print([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'])
-                time.sleep(5)
                 for endpoint in TestRunner.test_endpoints:
                     for bench_time in TestRunner.benchmark_time:
                         for max_conn in TestRunner.benchmark_max_connection:
