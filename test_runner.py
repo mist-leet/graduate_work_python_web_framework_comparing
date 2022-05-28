@@ -4,6 +4,10 @@ import re
 import subprocess
 import time
 import signal
+from dotenv import load_dotenv
+
+load_dotenv('database/.env')
+
 
 
 class TestRunner:
@@ -22,8 +26,8 @@ class TestRunner:
         'aiohttp', 'tornado'
     ]
 
-    benchmark_time = [5]
-    benchmark_max_connection = [100]
+    benchmark_time = [1]
+    benchmark_max_connection = [100, 1_000]
     benchmark_thread = [1]
 
     web_service_thread = [4]
@@ -59,7 +63,8 @@ class TestRunner:
 
         for app_path in TestRunner.test_app_dirs:
             for service_thread in TestRunner.web_service_thread:
-                main_proc = subprocess.Popen([f'{app_path}/start.sh', f'{service_thread}'], stdout=subprocess.PIPE)
+                main_proc = subprocess.Popen([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'], stdout=subprocess.PIPE)
+                print([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'])
                 time.sleep(5)
                 for endpoint in TestRunner.test_endpoints:
                     for bench_time in TestRunner.benchmark_time:
@@ -94,7 +99,7 @@ class TestRunner:
         return result
 
     @staticmethod
-    def dump_to_csv(data, filename: str = 'test_results.csv'):
+    def dump_to_csv(data, filename: str = 'results.csv'):
         with open(filename, 'w') as csvfile:
             csv_columns = [
                 'framework', 'url', 'threads', 'connections', 'req_count', 'total_time', 'rps', 'framework_run_threads'

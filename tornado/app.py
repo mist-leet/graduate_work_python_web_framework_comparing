@@ -54,18 +54,18 @@ class TestLargeHtmlHandler(tornado.web.RequestHandler):
         await self.render('index_render.html', data=data)
 
 
-# if __name__ == '__main__':
-db = AsyncDatabase()
-app = tornado.web.Application([
-    (r'/test', TestHandler),
-    (r'/test_basic_html', TestBasicHtmlHandler),
-    (r'/test_large_html', TestLargeHtmlHandler, dict(db=db)),
-    (r'/test_basic_db', TestBasicDbHandler, dict(db=db)),
-    (r'/test_medium_db', TestMediumDbDbHandler, dict(db=db)),
-    (r'/test_wait_db', TestWaitDbHandler, dict(db=db)),
-],
-    template_path=os.getenv('BASE_DIR') + '/static/tornado/',
-    static_path=os.getenv('BASE_DIR') + '/static/tornado/',
-)
-app.listen(8080)
-tornado.ioloop.IOLoop.current().start()
+if __name__ == '__main__':
+    db = AsyncDatabase()
+    app = tornado.web.Application([
+        (r'/test', TestHandler),
+        (r'/test_basic_html', TestBasicHtmlHandler),
+        (r'/test_large_html', TestLargeHtmlHandler, dict(db=db)),
+        (r'/test_basic_db', TestBasicDbHandler, dict(db=db)),
+        (r'/test_medium_db', TestMediumDbDbHandler, dict(db=db)),
+        (r'/test_wait_db', TestWaitDbHandler, dict(db=db)),
+    ],
+        template_path=os.getenv('BASE_DIR') + '/static/tornado/',
+        static_path=os.getenv('BASE_DIR') + '/static/tornado/',
+    )
+    app.listen(8080)
+    tornado.ioloop.IOLoop.current().start()

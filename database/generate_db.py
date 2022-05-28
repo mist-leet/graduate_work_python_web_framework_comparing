@@ -1,6 +1,6 @@
 import asyncio
 
-from database.async_db import AsyncDatabase
+from async_db import AsyncDatabase
 
 db = AsyncDatabase()
 
