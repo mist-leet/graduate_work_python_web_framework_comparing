@@ -19,14 +19,14 @@ class TestRunner:
     ]
 
     test_app_dirs = [
-        'aiohttp'
+        'aiohttp', 'tornado'
     ]
 
-    benchmark_time = [5, 10]
-    benchmark_max_connection = [100, 1000, 10_000]
+    benchmark_time = [5]
+    benchmark_max_connection = [100]
     benchmark_thread = [1]
 
-    web_service_thread = [4, 8, 16]
+    web_service_thread = [4]
 
     test_url_pattern = re.compile('@ (.+)')
     params_pattern = re.compile('(\d+) threads and (\d+) connections')
