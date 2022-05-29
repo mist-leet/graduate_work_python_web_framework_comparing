@@ -37,6 +37,6 @@ async def test_basic_html(request: Request):
 
 
 @router.get('/test_large_html')
-async def test_basic_html(request: Request):
+async def test_large_html(request: Request):
     data = await db.get_random_data(100)
     return templates.TemplateResponse('index_render.html', {'data': data, 'request': request})

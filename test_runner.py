@@ -23,14 +23,14 @@ class TestRunner:
     ]
 
     test_app_dirs = [
-        'aiohttp', 'tornado'
+        'aiohttp'
     ]
 
-    benchmark_time = [1]
-    benchmark_max_connection = [100, 1_000]
+    benchmark_time = [5, 15]
+    benchmark_max_connection = [100, 1_000, 10_000]
     benchmark_thread = [1]
 
-    web_service_thread = [4]
+    web_service_thread = [1, 4, 8]
 
     test_url_pattern = re.compile('@ (.+)')
     params_pattern = re.compile('(\d+) threads and (\d+) connections')
@@ -58,11 +58,12 @@ class TestRunner:
             ) * test_time for test_time in self.benchmark_time])
 
         print(f'Start tests. Total count {total_test_count}')
-        print(f'Excepted tests time: {aproximate_all_test_time}')
+        print(f'Excepted tests time: {aproximate_all_test_time // 60}m {aproximate_all_test_time % 60}s')
         i = 0
 
         for app_path in TestRunner.test_app_dirs:
             for service_thread in TestRunner.web_service_thread:
+                time.sleep(5)
                 main_proc = subprocess.Popen([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'], stdout=subprocess.PIPE)
                 print([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'])
                 time.sleep(5)
@@ -98,6 +99,9 @@ class TestRunner:
                                         })
                                         i += 1
                                         print(f'Test {i} / {total_test_count} passed.')
+                                        print('Result:')
+                                        for key, value in result[-1].items():
+                                            print(f'\t{key}: {value}')
 
         return result
 
