@@ -1,5 +1,14 @@
-import json
 import os
+import sys
+from dotenv import load_dotenv
+
+load_dotenv('../database/.env')
+
+sys.path.append(os.getenv('BASE_DIR'))
+print(os.getenv('BASE_DIR'))
+
+
+import json
 
 import tornado.ioloop
 import tornado.web
@@ -67,5 +76,5 @@ if __name__ == '__main__':
         template_path=os.getenv('BASE_DIR') + '/static/tornado/',
         static_path=os.getenv('BASE_DIR') + '/static/tornado/',
     )
-    app.listen(8080)
+    app.listen(int(sys.argv[1]))
     tornado.ioloop.IOLoop.current().start()

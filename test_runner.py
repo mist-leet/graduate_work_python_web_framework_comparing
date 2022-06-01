@@ -20,17 +20,18 @@ class TestRunner:
         '/test_wait_db',
         '/test_medium_db',
         '/test_basic_db',
+        '/test_calc'
     ]
 
     test_app_dirs = [
-        'aiohttp'
+        'fastAPI', 'flask'
     ]
 
     benchmark_time = [5, 15]
     benchmark_max_connection = [100, 1_000, 10_000]
     benchmark_thread = [1]
 
-    web_service_thread = [1, 4, 8]
+    web_service_thread = [4, 6, 8]
 
     test_url_pattern = re.compile('@ (.+)')
     params_pattern = re.compile('(\d+) threads and (\d+) connections')
@@ -90,7 +91,7 @@ class TestRunner:
                                         result.append({
                                             'framework': app_path,
                                             'framework_run_threads': service_thread,
-                                            'url': test_url,
+                                            'url': endpoint,
                                             'threads': threads,
                                             'connections': connections,
                                             'req_count': req_count,

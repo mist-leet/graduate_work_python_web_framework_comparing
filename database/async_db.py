@@ -127,7 +127,9 @@ class AsyncDatabase:
             echo=False,
         )
         self.async_session = sessionmaker(
-            self.engine, expire_on_commit=False, class_=AsyncSession
+            self.engine,
+            expire_on_commit=False,
+            class_=AsyncSession
         )
 
     async def generate_data(self) -> None:

@@ -1,12 +1,18 @@
 import json
+import os
 
-from database.async_db import AsyncDatabase
+from database.async_db import SyncDatabase
 from flask import Flask, render_template
 
-app = Flask(__name__)
-# app.secret_key = os.urandom(12)  # Generic key for dev purposes only
-db = AsyncDatabase()
+app = Flask(
+    __name__,
+    static_folder=f'{os.getenv("BASE_DIR")}/static/flask/',
+    static_url_path='/static',
+    template_folder=f'{os.getenv("BASE_DIR")}/static/flask/',
+)
+print('Run with\t', f'{os.getenv("BASE_DIR")}/static')
 
+db = SyncDatabase()
 
 @app.route('/test', methods=['GET'])
 async def test():
@@ -15,18 +21,18 @@ async def test():
 
 @app.route('/test_basic_db', methods=['GET'])
 async def test_basic_db():
-    data = await db.get_data_by_id()
+    data = db.get_data_by_id()
     return data.to_dict()
 
 
 @app.route('/test_medium_db', methods=['GET'])
 async def test_medium_db():
-    return json.dumps([obj.to_dict() for obj in await db.get_data_by_like()])
+    return json.dumps([obj.to_dict() for obj in db.get_data_by_like()])
 
 
 @app.route('/test_wait_db', methods=['GET'])
 async def test_wait_db():
-    await db.sleep()
+    db.sleep()
     return {}
 
 
@@ -37,7 +43,7 @@ async def test_basic_html():
 
 @app.route('/test_large_html', methods=['GET'])
 async def test_large_html():
-    data = await db.get_random_data(100)
+    data = db.get_random_data(100)
     return render_template('index_render.html', data=data)
 
 

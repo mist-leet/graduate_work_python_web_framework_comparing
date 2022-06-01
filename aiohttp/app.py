@@ -28,6 +28,7 @@ class AiohttpApplication:
                 web.get('/test_basic_db', self.test_basic_db_async),
                 web.get('/test_complex_db', self.test_complex_db),
                 web.get('/test_wait_db', self.test_wait_db_async),
+                web.get('/test_calc', self.test_calc),
             ])
         else:
             self.app.add_routes([
@@ -38,6 +39,7 @@ class AiohttpApplication:
                 web.get('/test_basic_db', self.test_basic_db),
                 web.get('/test_complex_db', self.test_complex_db),
                 web.get('/test_wait_db', self.test_wait_db),
+                web.get('/test_calc', self.test_calc),
             ])
 
         # STATIC_PATH = os.path.join(os.path.dirname(__file__), "../static")
@@ -91,6 +93,13 @@ class AiohttpApplication:
     async def test_wait_db_async(self, request: web.Request) -> web.Response:
         await self.db.sleep()
         return web.Response()
+
+    async def test_calc(self, request: web.Request) -> web.Response:
+        f = 1
+        for i in range(1, 50_000):
+            f *= i
+
+        return web.json_response({'50000!': f})
 
 
 async def get_app():
