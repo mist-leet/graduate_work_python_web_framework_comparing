@@ -48,3 +48,39 @@ cd wrk
 sudo make
 sudo cp wrk /usr/local/bin
 ```
+
+Запросы к БД:
+
+```sql
+select * from simplemock limit 5;
+
+ id |                                                                                                                              text                                                                                                                               
+----+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  1 | eegebibcgbghiddhbfiiddffheahfabegdifjbhecihhbijefegiahihegdfeijfceeccgbfechefggeheigbjifgdfdjbieadhjfjeadeddbaifdjhfeeadadjehecaieedgbgfbecbjeejabiccjccicjhgbgdhjfheafhfifgdjahbjbdfajccaebihcjgdjiibghahggdjbhicabahdbdgaicgefghgbigeabaeccaaggigiaijagddddea
+  2 | iihhacdijibacbjaahdieaejjdjdbefaagdgcfigbjfdhabcahhgajjjeddfgebhccfigaeegcdccjfhfcbjeeffdcegicfhccachcgegjcdgbfegaggjfgeicijadgbadebifjjeghejhifgfgiabejiehcdbjijdgceibbebfbhahhcehajhdcjgcgjihbacacijaedfeafhaaibiehfffbcgbgjehabjjfehiedjehfhcdfahibihehdbjcb
+  3 | hbchebiahbgehhchfcieeccabjbcbefcfddcbeijbghhhbaccidccagdjijccggajbecjficighdabajdecdhfcjbhahedhcijaecdcdbcafefbaagdajadhjbijbaeiifhdgeffjfgggidiahagdfffffjgfbicgdehhjcgjhacgbfjafghbjgaacacdecdjbbiibgbgibbbbiffjiihijejjfgbbeadagcgdigjeggecjfdbdhdjcicjbjhdh
+  4 | dhgcfedgcbahfifibajfijidfaahaabehbaacejeibecjbeicfbciaeafbjiggehbjahbdhcdfdjcgegahehifacghcjaddfcgeejegfcjhicdjiaacdjegddejhgebidjbfbdfciaedahhedgfjeahiccbdiaggjehdhgicbabjfgdcccjgfeiifdefdbccbedffhhjebfffghjgceegahifefahhedehdejfahdeefbabgfjehhdghbfiiifi
+  5 | jddjfebfbjefcddehbbjfheegjgbgihhbechbfeaeddbdeeejdjccgdiacbbfefefcadahgbdgcdhafiebffajjegbegdhjicfedfhbcafahccchfjbjehafdfehaeddhfiefhedgggaehijcfehddfjiidbjbbcbhecejdeihajifeheccghcehgidfjeijabgeeeaagjcdfgjfijjahegjbdcegghagcdhahhbbjfdiheefjagciibdhhiebf
+(5 rows)
+```
+
+```sql
+SELECT simplemock.id AS simplemock_id, simplemock.text AS simplemock_text 
+FROM simplemock 
+WHERE simplemock.text LIKE %(text_1)s
+
+ simplemock_id |                                                                                                                         simplemock_text                                                                                                                         
+---------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        107560 | aiafjdiicgajabdgdigeadiabegbabieabgcjhdgbbbjiafeeeeiajhbccbdbhacehaiicejajeicdgecfgibfdfabhjfahiaebdieidjabcdefghhaiijgbgbbijjfbjehhcaacjgicceabibfhajhgdbggdehgiiiadehfcgbgahcighjghfcfafaedgefdhhcjaehbcedbcgjdhiddadbdfggbjhejedjahifibahddfhaajegcjbjaahach
+        375200 | dabbaijgagfbcfggfecgfdjjafjdhihbecbdhedhcjghifccbbehcdaacbdjdeidccafhjffceafgaidhhefeehaaadgcbbbfdegedffabfhbfdachgeeddabfadddhdadidfibfchahbgedghbffdfgjjibfibfgadieedigafaeaddfeiabcdefghdjfhaeceahjcggeabfdfigacjjbfhghafaaeecaaeibbdggdcgbgdbifhfdhceihgdii
+        245776 | jaejaiacfcdaadbjicbaeehidiiifgeagfbjafcjcaebiegjggbjcdahcbjceheihaiaahcjgjjgiiahbbfaechiajjbidjbhhjbcedfaaidbegcdahccaacjdhgafjaeaedeejfadighcgihgeccahjhigjdcghbdgbfbifdafejheafhfddjgcccjcdjicigabcdefghefdadifceggcfejabciedchehhghgajfgijhhfifeaccibiciiiji
+        412648 | ifhaggdgbgjgfccighcadadfcfbbheagbcfdghejhfbjdddgfdhjabdadhaaiheiecbddhcggabideggghhaibjdcgfejaaabcdefgheeieahaiijcidjifgbhdffjafbhafcefafjaiaajcaefcdfecggaggfiacfabjibaifdejejcebefigjhedfajdgfijdcejcddjdbcdjheiaebffjhigdjagfcghdbdehgjgchbefcedhifiiahffgfa
+(4 rows)
+
+107560,aiafjdiicgajabdgdigeadiabegbabieabgcjhdgbbbjiafeeeeiajhbccbdbhacehaiicejajeicdgecfgibfdfabhjfahiaebdieidjabcdefghhaiijgbgbbijjfbjehhcaacjgicceabibfhajhgdbggdehgiiiadehfcgbgahcighjghfcfafaedgefdhhcjaehbcedbcgjdhiddadbdfggbjhejedjahifibahddfhaajegcjbjaahach
+245776,jaejaiacfcdaadbjicbaeehidiiifgeagfbjafcjcaebiegjggbjcdahcbjceheihaiaahcjgjjgiiahbbfaechiajjbidjbhhjbcedfaaidbegcdahccaacjdhgafjaeaedeejfadighcgihgeccahjhigjdcghbdgbfbifdafejheafhfddjgcccjcdjicigabcdefghefdadifceggcfejabciedchehhghgajfgijhhfifeaccibiciiiji
+375200,dabbaijgagfbcfggfecgfdjjafjdhihbecbdhedhcjghifccbbehcdaacbdjdeidccafhjffceafgaidhhefeehaaadgcbbbfdegedffabfhbfdachgeeddabfadddhdadidfibfchahbgedghbffdfgjjibfibfgadieedigafaeaddfeiabcdefghdjfhaeceahjcggeabfdfigacjjbfhghafaaeecaaeibbdggdcgbgdbifhfdhceihgdii
+412648,ifhaggdgbgjgfccighcadadfcfbbheagbcfdghejhfbjdddgfdhjabdadhaaiheiecbddhcggabideggghhaibjdcgfejaaabcdefgheeieahaiijcidjifgbhdffjafbhafcefafjaiaajcaefcdfecggaggfiacfabjibaifdejejcebefigjhedfajdgfijdcejcddjdbcdjheiaebffjhigdjagfcghdbdehgjgchbefcedhifiiahffgfa
+
+
+```
