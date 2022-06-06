@@ -1,7 +1,9 @@
 import asyncio
 
-from async_db import AsyncDatabase
+from async_db import AsyncDatabase, SyncDatabase
 
-db = AsyncDatabase()
+db = SyncDatabase()
 
-asyncio.run(db.generate_data())
+db.get_data_by_like()
+
+# asyncio.run(db.generate_data())

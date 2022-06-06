@@ -20,24 +20,23 @@ class TestRunner:
         '/test_wait_db',
         '/test_medium_db',
         '/test_basic_db',
-        '/test_calc'
     ]
 
     test_app_dirs = [
-        'fastAPI', 'flask'
+        'aiohttp', 'fastAPI', 'flask'
     ]
 
-    benchmark_time = [5, 15]
-    benchmark_max_connection = [100, 1_000, 10_000]
-    benchmark_thread = [1]
+    benchmark_time = [5]
+    benchmark_max_connection = [100]
+    benchmark_thread = [4]
 
-    web_service_thread = [4, 6, 8]
+    web_service_thread = [4]
 
     test_url_pattern = re.compile('@ (.+)')
     params_pattern = re.compile('(\d+) threads and (\d+) connections')
     time_total_pattern = re.compile('(\d+) requests in ([\d+\.]+)s')
     rps = re.compile('Requests\/sec:\s+([\d.]+)')
-
+    errors = re.compile('Socket errors: connect (\d+), read (\d+), write (\d+), timeout (\d+)')
     def run_tests(self):
         result = []
 
@@ -64,6 +63,8 @@ class TestRunner:
 
         for app_path in TestRunner.test_app_dirs:
             for service_thread in TestRunner.web_service_thread:
+                with subprocess.Popen(['killall', 'gunicorn'], stdout=subprocess.PIPE) as proc:
+                    ...
                 time.sleep(5)
                 main_proc = subprocess.Popen([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'], stdout=subprocess.PIPE)
                 print([f'{app_path}/start.sh', f'{service_thread}', f'{os.getenv("BASE_DIR")}'])
@@ -87,7 +88,7 @@ class TestRunner:
                                         threads = re.search(TestRunner.params_pattern, output).group(1)
                                         connections = re.search(TestRunner.params_pattern, output).group(2)
                                         rps = re.search(TestRunner.rps, output).group(1)
-
+                                        errors = re.search(TestRunner.errors, output)
                                         result.append({
                                             'framework': app_path,
                                             'framework_run_threads': service_thread,
@@ -97,6 +98,7 @@ class TestRunner:
                                             'req_count': req_count,
                                             'total_time': total_time,
                                             'rps': rps,
+                                            'errors': errors.groups() if errors else None,
                                         })
                                         i += 1
                                         print(f'Test {i} / {total_test_count} passed.')
@@ -104,13 +106,16 @@ class TestRunner:
                                         for key, value in result[-1].items():
                                             print(f'\t{key}: {value}')
 
+
+
         return result
 
     @staticmethod
     def dump_to_csv(data, filename: str = 'results.csv'):
         with open(filename, 'w') as csvfile:
             csv_columns = [
-                'framework', 'url', 'threads', 'connections', 'req_count', 'total_time', 'rps', 'framework_run_threads'
+                'framework', 'url', 'threads', 'connections', 'req_count',
+                'total_time', 'rps', 'framework_run_threads', 'errors'
             ]
             writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
             writer.writeheader()
@@ -124,6 +129,7 @@ class TestRunner:
                     'req_count': d['req_count'],
                     'total_time': d['total_time'],
                     'rps': d['rps'],
+                    'errors': d['errors']
                 })
 
 
